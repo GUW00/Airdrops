@@ -1,6 +1,6 @@
 # **Airdrop Processing Tool**
 
-This tool processes manually downloaded CSV files containing token holder data and calculates each holder’s airdrop amount based on their percentage holding. It supports two tokens (e.g., Shrooms and Spores) with fixed total pools (7,000,000 for Shrooms and 500,000,000 for Spores). The tool outputs a CSV file formatted for safewallet with the following columns: `token_type, token_address, reciever, amount`. The output file is automatically given a unique name (e.g., `Airdrop_1.csv`, `Airdrop_2.csv`, etc.) so that no file is overwritten.
+This tool processes manually downloaded CSV files containing token holder data and calculates each holder’s airdrop amount based on their percentage holding. It supports two tokens (e.g., Shrooms and Spores) with fixed total pools (7,000,000 for Shrooms and 500,000,000 for Spores). The tool outputs a CSV file formatted for safewallet with the following columns: `token_type, token_address, receiver, amount`. The output file is automatically given a unique name (e.g., `Airdrop_1.csv`, `Airdrop_2.csv`, etc.) so that no file is overwritten.
 
 ## **File Structure**
 
