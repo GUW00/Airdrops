@@ -1,6 +1,6 @@
 # **Airdrop Processing Tool**
 
-This tool processes manually downloaded CSV files containing token holder data and calculates each holder’s airdrop amount based on their percentage holding. It supports two tokens (e.g., Shrooms and Spores) with fixed total pools (7,000,000 for Shrooms and 500,000,000 for Spores). The tool outputs a CSV file formatted for safewallet with the following columns: `token_type, token_address, receiver, amount`. The output file is automatically given a unique name (e.g., `Airdrop_1.csv`, `Airdrop_2.csv`, etc.) so that no file is overwritten.
+This tool processes manually downloaded CSV files containing token holder data and calculates each holder’s airdrop amount based on their percentage holding. It supports two tokens (e.g., Shrooms and Spores) with fixed total pools (7,000,000 for Shrooms and 500,000,000 for Spores). The tool outputs a CSV file formatted for safewallet with the following columns: `token_type, token_address, reciever, amount`. The output file is automatically given a unique name (e.g., `Airdrop_1.csv`, `Airdrop_2.csv`, etc.) so that no file is overwritten.
 
 ## **File Structure**
 
@@ -55,6 +55,54 @@ SHROOM\_LP=0x28DEf03d8DC0d186FaBAe9C46043e8eF9BfFCc28 SPORE\_LP=0x2a91571238303c
 * **Formats the output with columns: `token_type` (always "ERC20"), `token_address` (from config), `receiver`, and `amount`.**  
 * **Saves the combined output to a uniquely named file (e.g., `Airdrop_1.csv`, `Airdrop_2.csv`, etc.) so that no file is overwritten.**
 
+## **New to VS and Python?** If you're new to Visual Studio (or Visual Studio Code) and Python  **1\. Install Python**
+
+* ## **Download Python:**   Go to [python.org](https://www.python.org/downloads/) and download the latest version of Python (3.8 or above is recommended).
+
+* ## **Install Python:**   Run the installer. Make sure to check **"Add Python to PATH"** during the installation process so you can run Python from the command line.
+
+### **2\. Install Visual Studio Code (Optional but Recommended)**
+
+* ## **Download VS Code:**   Visit [code.visualstudio.com](https://code.visualstudio.com/) and download the installer for your operating system.
+
+* ## **Install VS Code:**   Follow the installation instructions.
+
+* ## **Install the Python Extension:**   Open VS Code, go to the Extensions view (Ctrl+Shift+X), and install the official Python extension provided by Microsoft.
+
+### **3\. Set Up Your Project**
+
+* ## **Clone or Download the Repository:**   If your repository is hosted on GitHub (for example, `https://github.com/GUW00/Airdrops`), you can clone it: Then open the cloned folder in VS Code.
+
+* ## **Open the Project Folder:**   In VS Code, go to **File \> Open Folder…** and select your project folder (e.g., `Airdrops`).
+
+### **4\. (Optional) Create a Virtual Environment**
+
+## Using a virtual environment keeps your project dependencies isolated:
+
+* ## **Create a Virtual Environment:**   Open the terminal (Ctrl+\` in VS Code) in your project folder and run: **python \-m venv venv**
+
+* ## Activate the Virtual Environment:   Windows: venv\\Scripts\\activate   MacOS/Linux: source venv/bin/activate
+
+* ## 
+
+### **5\. Install Required Python Packages**
+
+## Your project uses `pandas` (and if you're using the .env file, `python-dotenv`). In your terminal, run: **pip install pandas python-dotenv**  This will install all necessary packages.  **6\. Configure Your Project (if needed)**
+
+* ## Check the config.py File:   Make sure your `config.py` file is correctly set up with the public information (contract addresses, total pool values, etc.). Since these are public values, you don’t need to worry about sensitive data.
+
+* ## Ensure Input Files are Present:   Make sure you have the required CSV files (`shroom_holders.csv` and `spore_holders.csv`) in your project directory.
+
+### **7\. Run the Script**
+
+## Once everything is set up:
+
+* ## Open the Terminal in VS Code:   Use the integrated terminal in VS Code (Ctrl+\`).
+
+* ## Run the Script:   With your virtual environment activated (if you created one), run: **python process\_airdrop.py**
+
+* ## **This will process your CSV files and output a uniquely named file (like `Airdrop_1.csv`).**
+
 ## **How to Use**
 
 1. **Download Your CSV Files**  
@@ -73,10 +121,10 @@ SHROOM\_LP=0x28DEf03d8DC0d186FaBAe9C46043e8eF9BfFCc28 SPORE\_LP=0x2a91571238303c
 * **Process each CSV file.**  
 * **Convert percentage values to decimals (e.g., "44%" → 0.44).**  
 * **Multiply by the total pool (7,000,000 for Shrooms or 500,000,000 for Spores) and round the result.**  
-* **Format the output for SafeWallet.**  
-* **Save the final output to a uniquely named file (e.g., `Airdrop_1.csv`).**  
-  **If `Airdrop_1.csv` already exists, it will create `Airdrop_2.csv`, and so on.**
+* **Format the output for SafeWallet.**
 
+**Save the final output to a uniquely named file (e.g., `Airdrop_1.csv`).**  
+**If `Airdrop_1.csv` already exists, it will create `Airdrop_2.csv`, and so on.**  
 **Review the Output**  
 **Open the generated CSV file (e.g., `Airdrop_1.csv`) to verify the results.**  
 **Each row will display:**
