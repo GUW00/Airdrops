@@ -12,6 +12,7 @@ def process_csv(csv_file, total_pool):
       - 'address': the token holder's address
       
     For example, "44%" or "44" becomes 0.44, and then 0.44 * total_pool.
+    Rows with unwanted addresses or airdrop amounts 0 or less are omitted.
     """
     df = pd.read_csv(csv_file)
     # Normalize column names to lowercase.
@@ -23,17 +24,28 @@ def process_csv(csv_file, total_pool):
     if 'address' not in df.columns:
         raise KeyError("CSV must contain an 'address' column.")
     
+    # Omit unwanted addresses (ignoring case)
+    omit_addresses = [
+        "0x0000000000000000000000000000000000000000",
+        "0x44574D53474729F2949a7eCfb68b0641cFDA4aA8"
+    ]
+    df = df[~df['address'].str.lower().isin([addr.lower() for addr in omit_addresses])]
+
     # Remove any '%' symbol and convert the percentage to a decimal.
     df['percentage'] = df['percentage'].astype(str).str.replace('%', '').astype(float) / 100.0
     
     # Calculate the airdrop amount and round to the nearest integer.
     df['airdrop'] = (df['percentage'] * total_pool).round().astype(int)
+    
+    # Omit any addresses with airdrop 0 or less.
+    df = df[df['airdrop'] > 0]
+    
     return df
 
 def format_for_safewallet(df, token_contract):
     """
     Creates a DataFrame with the required output columns for safewallet:
-      - token_type: always "ERC20"
+      - token_type: always "erc20"
       - token_address: the token's contract address (from config)
       - receiver: the token holder's address
       - amount: the calculated airdrop amount
@@ -43,7 +55,7 @@ def format_for_safewallet(df, token_contract):
     out_df = pd.DataFrame()
     out_df['receiver'] = df['address']
     out_df['amount'] = df['airdrop']
-    out_df['token_type'] = 'ERC20'
+    out_df['token_type'] = 'erc20'
     out_df['token_address'] = token_contract
     # Reorder columns.
     return out_df[['token_type', 'token_address', 'receiver', 'amount']]
@@ -67,13 +79,23 @@ def main():
     Steps:
       1. Process the 'shroom_holders.csv' using the SHROOM_AIRDROP_POOL.
       2. Process the 'spore_holders.csv' using the SPORE_AIRDROP_POOL.
-      3. Format the output for safewallet (with columns: token_type, token_address, receiver, amount).
-      4. Combine the outputs and save to a unique file (e.g., Airdrop_1.csv).
+      3. Adjust the airdrop amounts to ensure the total exactly matches the pool.
+      4. Format the output for safewallet (with columns: token_type, token_address, receiver, amount).
+      5. Combine the outputs and save to a unique file (e.g., Airdrop_1.csv).
     """
     # Process the Shrooms CSV (pool = 7,000,000)
     shroom_df = process_csv("shroom_holders.csv", SHROOM_AIRDROP_POOL)
+    # Adjust Shrooms amounts to exactly match the pool.
+    diff_shroom = SHROOM_AIRDROP_POOL - shroom_df['airdrop'].sum()
+    if diff_shroom != 0:
+        shroom_df.loc[shroom_df.index[0], 'airdrop'] += diff_shroom
+
     # Process the Spores CSV (pool = 500,000,000)
     spore_df = process_csv("spore_holders.csv", SPORE_AIRDROP_POOL)
+    # Adjust Spores amounts to exactly match the pool.
+    diff_spore = SPORE_AIRDROP_POOL - spore_df['airdrop'].sum()
+    if diff_spore != 0:
+        spore_df.loc[spore_df.index[0], 'airdrop'] += diff_spore
     
     # Format each output for safewallet.
     shroom_out = format_for_safewallet(shroom_df, SHROOM_CONTRACT)
