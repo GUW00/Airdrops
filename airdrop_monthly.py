@@ -2,10 +2,17 @@ import os
 import pandas as pd
 from config import KID_CONTRACT, SHROOM_CONTRACT, SPORE_CONTRACT
 
+<<<<<<< HEAD
 def get_unique_filename(prefix, ext=".csv"):
     """
     Generate a unique filename in the current directory.
     For example, if Kid_Airdrop_Shrooms_1.csv exists, it will return Kid_Airdrop_Shrooms_2.csv, etc.
+=======
+def get_unique_filename(prefix="Airdrop_Kid_", ext=".csv"):
+    """
+    Generate a unique filename in the current directory.
+    For example, if Airdrop_Kid_1.csv exists, it will return Airdrop_Kid_2.csv, etc.
+>>>>>>> 243cd62e9245b7c7246ce30492cfcc26bdef37bb
     """
     i = 1
     while os.path.exists(f"{prefix}{i}{ext}"):
@@ -22,29 +29,46 @@ df["quantity"] = pd.to_numeric(df["quantity"], errors="coerce")
 df = df.dropna(subset=["quantity"])
 
 # Create the airdrop rows for Shrooms:
+<<<<<<< HEAD
 # - token_type is always "erc20"
+=======
+# - token_type is always "ERC20"
+>>>>>>> 243cd62e9245b7c7246ce30492cfcc26bdef37bb
 # - token_address is SHROOM_CONTRACT from config
 # - receiver is the address from the CSV
 # - amount is quantity * 20,000 (rounded to nearest integer)
 shrooms_df = pd.DataFrame({
+<<<<<<< HEAD
     "token_type": "erc20",
+=======
+    "token_type": "ERC20",
+>>>>>>> 243cd62e9245b7c7246ce30492cfcc26bdef37bb
     "token_address": SHROOM_CONTRACT,
     "receiver": df["address"],
     "amount": (df["quantity"] * 20000).round(0).astype(int)
 })
 
 # Create the airdrop rows for Spores:
+<<<<<<< HEAD
 # - token_type is always "erc20"
+=======
+# - token_type is always "ERC20"
+>>>>>>> 243cd62e9245b7c7246ce30492cfcc26bdef37bb
 # - token_address is SPORE_CONTRACT from config
 # - receiver is the address from the CSV
 # - amount is quantity * 1,500,000 (rounded to nearest integer)
 spores_df = pd.DataFrame({
+<<<<<<< HEAD
     "token_type": "erc20",
+=======
+    "token_type": "ERC20",
+>>>>>>> 243cd62e9245b7c7246ce30492cfcc26bdef37bb
     "token_address": SPORE_CONTRACT,
     "receiver": df["address"],
     "amount": (df["quantity"] * 1500000).round(0).astype(int)
 })
 
+<<<<<<< HEAD
 # Generate unique output filenames for each file
 shrooms_filename = get_unique_filename("Kid_Airdrop_Shrooms_")
 spores_filename = get_unique_filename("Kid_Airdrop_Spores_")
@@ -55,3 +79,16 @@ spores_df.to_csv(spores_filename, index=False)
 
 print(f"Kid Shrooms airdrop file created: {shrooms_filename}")
 print(f"Kid Spores airdrop file created: {spores_filename}")
+=======
+# Combine both DataFrames into a single DataFrame
+combined_df = pd.concat([shrooms_df, spores_df], ignore_index=True)
+
+# Generate a unique output filename
+output_filename = get_unique_filename()
+
+# Write the combined DataFrame to CSV with the header:
+# token_type, token_address, receiver, amount
+combined_df.to_csv(output_filename, index=False)
+
+print(f"Airdrop file created: {output_filename}")
+>>>>>>> 243cd62e9245b7c7246ce30492cfcc26bdef37bb

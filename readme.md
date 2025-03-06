@@ -35,13 +35,13 @@ SHROOM\_LP=0x28DEf03d8DC0d186FaBAe9C46043e8eF9BfFCc28 SPORE\_LP=0x2a91571238303c
 
 **Note:**
 
-* SHROOM\_CONTRACT and SPORE\_CONTRACT are the actual token contract addresses.  
-* SRHOOM\_LP and SPORE\_LP are the LP addresses (if needed).  
-* SHROOM\_AIRDROP\_POOL is the total amount of Shrooms to distribute.  
-* SPORE\_AIRDROP\_POOL is the total amount of Spores to distribute.  
-* You can add additional tokens, remember to update **airdrop\_weekly.py**
+* `SHROOM_CONTRACT` and `SPORE_CONTRACT` are the actual token contract addresses.  
+* `SRHOOM_LP` and `SPORE_LP` are the LP addresses (if needed).  
+* `SHROOM_AIRDROP_POOL` is the total amount of Shrooms to distribute.  
+* `SPORE_AIRDROP_POOL` is the total amount of Spores to distribute.  
+* You can add additional tokens, remember to update **process\_airdrop.py**
 
-### **3\. airdrop\_weekly.py**
+### **3\. `process_airdrop.py`**
 
 **This script processes your manually downloaded CSV files. It assumes the CSV files have at least two columns:**
 
@@ -83,20 +83,34 @@ SHROOM\_LP=0x28DEf03d8DC0d186FaBAe9C46043e8eF9BfFCc28 SPORE\_LP=0x2a91571238303c
 
 ## **How to Use the Tool**
 
-1. Download Your CSV Files  
-   • Obtain your token holder data for Shrooms and Spores (e.g., from Polygonscan).  
-   • Save the files as: \- shroom\_holders.csv  
-   \- spore\_holders.csv  
-   • Each CSV must contain: \- An "address" column with the token holder’s address. \- A "percentage" column with values like "44%" or "44".  
-2. Run the Tool  
-   • Open your terminal in the project directory (ensure your virtual environment is activated, if used).  
-   • Execute the script with the command: python airdrop\_weekly.py  
-   • The script will: \- Process each CSV file. \- Convert percentage values to decimals. \- Multiply by the respective total pool (7,000,000 for Shrooms; 500,000,000 for Spores) and round the result. \- Format the output for SafeWallet. \- Save the output to a uniquely named file (e.g., Airdrop\_1.csv). If Airdrop\_1.csv exists, it will create Airdrop\_2.csv, etc.  
-3. Review the Output  
-   • Open the generated CSV file to verify the results.  
-   • Each row will display: \- token\_type: "ERC20" \- token\_address: The contract address from config.py. \- receiver: The token holder’s address. \- amount: The calculated airdrop amount (e.g., for a holder with 44% of Shrooms, 0.44 \* 7,000,000 ≈ 3,080,000).
+1. **Download Your CSV Files**  
+   * **Obtain your token holder data for Shrooms and Spores (for example, from Polygonscan).**  
+   * **Save the files as:**  
+     * **`shroom_holders.csv`**  
+     * **`spore_holders.csv`**  
+   * **Ensure that each CSV contains an `address` column and a `percentage` column.**  
+     * **The `percentage` column should contain values like "44%" or "44".**  
+2. **Run the Tool**  
+   **Open your terminal in the project directory and run: (I use VisualStudios)**  
+   	**python process\_airdrop.py**
 
----
+**The script will:**
+
+* **Process each CSV file.**  
+* **Convert percentage values to decimals (e.g., "44%" → 0.44).**  
+* **Multiply by the total pool (7,000,000 for Shrooms or 500,000,000 for Spores) and round the result.**  
+* **Format the output for SafeWallet.**  
+* **Save the final output to a uniquely named file (e.g., `Airdrop_1.csv`).**  
+  **If `Airdrop_1.csv` already exists, it will create `Airdrop_2.csv`, and so on.**
+
+**Review the Output**  
+**Open the generated CSV file (e.g., `Airdrop_1.csv`) to verify the results.**  
+**Each row will display:**
+
+* **`token_type`: "ERC20"**  
+* **`token_address`: The contract address from your config.**  
+* **`receiver`: The holder's address.**  
+* **`amount`: The calculated airdrop amount (e.g., for a holder with 44% of Shrooms: 0.44 \* 7,000,000 ≈ 3,080,000).**
 
 ## **Customization & Troubleshooting**
 
