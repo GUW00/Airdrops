@@ -2,7 +2,7 @@ import os
 import pandas as pd
 from config import SHROOM_CONTRACT, SPORE_CONTRACT, SHROOM_AIRDROP_POOL, SPORE_AIRDROP_POOL
 
-# Define output directory
+# Define output directory for the final CSV (remains "LP")
 OUTPUT_DIR = "LP"
 
 # Ensure output folder exists
@@ -30,7 +30,7 @@ def process_csv(csv_file, total_pool):
     Rows with unwanted addresses or airdrop amounts 0 or less are omitted.
     """
     df = pd.read_csv(csv_file)
-
+    
     # Normalize column names to lowercase.
     df.columns = [col.lower() for col in df.columns]
 
@@ -77,15 +77,22 @@ def main():
     """
     Processes LP airdrops for SHROOM and SPORE liquidity providers and saves them in LP/.
     """
+    # Update file paths to point to the correct location.
+    # Since the script is run from D:\Github\Smart-Contracts\Airdrop,
+    # and the CSVs are in the LP folder within that directory, use "LP".
+    base_path = "LP"
+    shroom_csv_path = os.path.join(base_path, "shroom_holders.csv")
+    spore_csv_path = os.path.join(base_path, "spore_holders.csv")
+    
     # Process the Shrooms LP CSV (pool = 7,000,000)
-    shroom_df = process_csv("shroom_holders.csv", SHROOM_AIRDROP_POOL)
+    shroom_df = process_csv(shroom_csv_path, SHROOM_AIRDROP_POOL)
     # Adjust Shrooms amounts to exactly match the pool.
     diff_shroom = SHROOM_AIRDROP_POOL - shroom_df['airdrop'].sum()
     if diff_shroom != 0:
         shroom_df.loc[shroom_df.index[0], 'airdrop'] += diff_shroom
 
     # Process the Spores LP CSV (pool = 500,000,000)
-    spore_df = process_csv("spore_holders.csv", SPORE_AIRDROP_POOL)
+    spore_df = process_csv(spore_csv_path, SPORE_AIRDROP_POOL)
     # Adjust Spores amounts to exactly match the pool.
     diff_spore = SPORE_AIRDROP_POOL - spore_df['airdrop'].sum()
     if diff_spore != 0:
