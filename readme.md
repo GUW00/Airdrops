@@ -1,126 +1,118 @@
-Airdrop Processing Tool - Quick Start Guide
-This tool automates the processing of manually downloaded CSV files containing token holder data.
-It calculates each holder’s airdrop amount based on their percentage holding or fixed allocations.
-The tool supports Shrooms, Spores, and BRUH token airdrops and ensures that each output file
-is formatted for SafeWallet.
 
-✅ Supports weekly, monthly, and liquidity pool (LP) airdrops
-✅ Automatically assigns a unique filename to prevent overwriting
-✅ Ensures airdrop amounts match exactly with the allocated total pools
-✅ Excludes unwanted or zero-value addresses from the final CSV
+🔧 Project Overview
+The toolkit supports three main types of airdrops:
 
-How to Use This Tool
-Follow these simple steps to run the airdrop scripts:
+Kid Mooshie NFT Holders (airdrop_kid.py)
 
-1. Install Python
-Download the latest version of Python 3.8+ from https://www.python.org
-During installation, check "Add Python to PATH".
-2. Set Up Your Project
-Clone or download the repository from GitHub.
-Navigate to the project folder.
-3. Install Dependencies
-Install the required Python packages:
+Bruh NFT Holders (airdrop_bruh.py)
+
+Liquidity Providers (LP) for SHROOM and SPORE (airdrop_lp.py)
+
+Each script pulls from a config.py file and reads CSV files containing address and quantity/percentage data to generate SafeWallet-compatible output files.
+
+📁 Directory Structure
+config.py: Stores all contract addresses and airdrop pool constants.
+
+airdrop_kid.py: Handles fixed-rate airdrops for Kid Mooshie holders.
+
+airdrop_bruh.py: Supports more complex logic including:
+
+Combined CSV sources
+
+Dynamic quantity normalization
+
+Omission of blacklisted addresses
+
+airdrop_lp.py: Proportionally distributes tokens based on LP share percentages.
+
+kid_shroom/, Bruh/, LP/: Output folders for each respective script.
+
+✅ Requirements
+Python 3.8+
+
+pandas
+
+python-dotenv
+
+Install dependencies using:
 
 pip install pandas python-dotenv
 
-4. Configure Your .env File
-Create a .env file in the project folder and add the following:
+⚙️ Configuration
+Before running any script, make sure your .env file contains relevant API keys or environment variables if needed, and check that config.py includes the latest contract addresses and pool allocations:
 
-5. Update Your config.py
-Ensure config.py contains the correct contract addresses and pool allocations:
+Examples in config.py:
 
 SHROOM_LP = "0x28DEf03d8DC0d186FaBAe9C46043e8eF9BfFCc28"
 SPORE_LP = "0x2a91571238303c6700A9336342c754e159243168"
-SHROOM_CONTRACT = "0x924B16Dfb993EEdEcc91c6D08b831e94135dEaE1"
-SPORE_CONTRACT = "0x089582AC20ea563c69408a79E1061de594b61bED"
-KID_CONTRACT = "0x9c92B882aC7aeff58414D874de60d30381991BaD"
 SHROOM_AIRDROP_POOL = 7000000
 SPORE_AIRDROP_POOL = 500000000
-BRUH_CONTRACT = "0xa52410B8b3Ce16d3f0E607ce8f86b3b4AC30fE2F"
-BRUH_ALL = 125000
-BRUH_CURRENT = 100000
+BRUH_ALL = 100000
+BRUH_CURRENT = 125000
 JIMMY = 25000
 
-File Structure
-Your project folder should look like this:
+📌 How to Use
+Kid Airdrop
 
-Airdrops/
-├── .env
-├── config.py
-├── airdrop_kid.py
-├── airdrop_bruh.py
-├── airdrop_lp.py
-├── kid_shroom/ (Contains Kid Shroom Airdrop files)
-├── LP/ (Contains LP Airdrop files)
-├── Bruh/ (Contains Bruh Airdrop files)
-└── README.txt (this guide)
+Place kid_holders.csv in the root directory.
 
-Running the Airdrop Scripts
-Each script processes manually downloaded CSV files and outputs a SafeWallet-formatted CSV file.
+Run: python airdrop_kid.py
 
-1. Weekly Airdrop
-Processes shroom_holders.csv and spore_holders.csv, distributing tokens based on percentage holdings.
+Output: Kid_Airdrop_Shrooms_X.csv and Kid_Airdrop_Spores_X.csv in kid_shroom/
 
-Download the Shroom LP Holders and rename it to shroom.holders.csv
-https://polygonscan.com/token/0x28def03d8dc0d186fabae9c46043e8ef9bffcc28#balances
+Bruh Airdrop
 
-Download the SPORER LP Holders and rename it to spore.holders.csv
-https://polygonscan.com/token/0x2a91571238303c6700a9336342c754e159243168#balances
+Place bruh_all.csv, bruh_mono.csv, bruh_color.csv, and jimmy.csv in the Bruh/ folder.
 
-Output:
-Airdrop_X.csv (stored in Airdrops/)
+Run: python airdrop_bruh.py
 
-2. Monthly Airdrop
-Processes kid_holders.csv and distributes tokens based on fixed multipliers.
+Output: Airdrop_Bruh_X.csv in Bruh/
 
-Download the Kid Shroom Holders and rename it to Kid_holders.csv
-https://www.signorcrypto.com/toolkit/snapshot
-Address = 0x9c92B882aC7aeff58414D874de60d30381991BaD
+LP Airdrop
 
-Input
-kid_holders.csv
-Output:
-Kid_Airdrop_Shrooms_X.csv
-Kid_Airdrop_Spores_X.csv
-Stored in kid_shroom/ folder.
+Place shroom_holders.csv and spore_holders.csv in the LP/ folder.
 
-3. BRUH Token Airdrop
-Processes bruh_holders.csv and bruh_current.csv into a single output file.
+Run: python airdrop_lp.py
 
-Download the Bruh Holders and rename it to bruh_holders.csv
-https://www.signorcrypto.com/toolkit/snapshot
-Address = 0xeE0Db7c640b5A27405384Abf62db1985d12F0256
+Output: Airdrop_LP_X.csv in LP/
 
-Download the Bruh Holders and rename it to bruh_current.csv
-https://www.signorcrypto.com/toolkit/snapshot
-Address = 0xeE0Db7c640b5A27405384Abf62db1985d12F0256
-Token IDs = Current Edition
+🔐 Address Filtering
+The following addresses are automatically excluded from airdrops:
 
-Input:
-bruh_holders.csv
-bruh_current.csv
-Output:
-Airdrop_Bruh_X.csv
-Stored in Bruh/ folder.
+0x000000000000000000000000000000000000dead
 
-Fixing CSV Errors
-If you get a KeyError: 'percentage', check that your CSV file contains a percentage column.
-If you get KeyError: 'quantity', check that your CSV contains address and quantity columns.
-Ensure column names do not have extra spaces.
-Ensuring Unique File Names
-Generated airdrop files will never overwrite existing files. The script automatically assigns unique filenames like:
+0x0000000000000000000000000000000000000000
 
-Airdrop_1.csv
-Airdrop_2.csv
-Airdrop_3.csv
+Any additional blacklisted addresses can be added in airdrop_bruh.py under the OMIT_ADDRESSES list.
 
-Example Run (Step-by-Step)
-Download CSVs
-shroom_holders.csv and spore_holders.csv from Polygonscan or another data source.
-Run the script
-Open your terminal or command prompt.
-Navigate to the project folder.
-Run the appropriate script based on the airdrop type.
-Check the output
-The generated CSV will be saved in the respective folder.
-This tool ensures airdrops are processed quickly, accurately, and securely.
+🔍 Features
+Dynamic filename generation to prevent overwrites
+
+Intelligent column handling and error checking
+
+Built-in rounding adjustment to match exact pool totals
+
+Lowercasing of addresses for consistent validation
+
+SafeWallet-ready CSV formatting
+
+Separation of output per airdrop category
+
+📈 Example Airdrop Calculations
+Kid Holders:
+
+SHROOM = quantity × 20,000
+
+SPORE = quantity × 1,500,000
+
+Bruh Holders:
+
+Airdrop is proportional to quantity share per group
+
+Each subgroup (ALL, CURRENT, JIMMY) gets a different pool
+
+LP Providers:
+
+Airdrop = percentage × total pool (SHROOM or SPORE)
+
+Any leftover (usually 0.1%) from rounding is added to the top address (treasury)
